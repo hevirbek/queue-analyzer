@@ -66,6 +66,11 @@ class PeopleDetector:
                             0.5, color, 2)
         return image
 
+    def put_count_text(self, image, count):
+        cv2.putText(image, "People Count: " + str(count), (10, 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
+        return image
+
     def resize(self, image: np.ndarray) -> np.ndarray:
         (H, W) = image.shape[:2]
         if W > 1000:
