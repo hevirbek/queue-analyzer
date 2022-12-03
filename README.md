@@ -16,6 +16,5 @@ Added load methods for weights and config files. Thanks to the ***load_weights_f
 
 Original | Detected
 --- | ---
-
 ![original](images/test2.jpg) | ![detected](images/results/test2_output.jpg)
 ![original](images/test8.jpg) | ![detected](images/results/test8_output.jpg)
