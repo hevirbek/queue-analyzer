@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 import os
+import requests
+import tqdm
 
 from typing import Tuple
 
@@ -12,12 +14,49 @@ PERSON_ID = LABELS.index("person")
 
 
 class PeopleDetector:
-    def __init__(self, weightsPath: str, configPath: str, conf: float = 0.5, thresh: float = 0.3):
+    def __init__(self, weightsPath: str = None, configPath: str = None, conf: float = 0.5, thresh: float = 0.3):
         self.conf = conf
         self.thresh = thresh
         self.weightsPath = weightsPath
         self.configPath = configPath
-        self.net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
+        if weightsPath is not None and configPath is not None:
+            self.net = cv2.dnn.readNetFromDarknet(configPath, weightsPath)
+        else:
+            self.net = None
+
+    def load_config(self, configPath: str):
+        self.configPath = configPath
+
+    def load_weights(self, weightsPath: str):
+        self.weightsPath = weightsPath
+
+    def load_weights_from_url(self, url: str):
+
+        # check if yolo-coco folder exists
+        if not os.path.exists(path="yolo-coco"):
+            os.mkdir(name='yolo-coco')
+
+        # check if weights file exists
+        if not os.path.exists("yolo-coco/yolov3.weights"):
+            # show download progress
+            r = requests.get(url, stream=True)
+            total_size = int(r.headers.get('content-length', 0))
+            block_size = 1024
+            wrote = 0
+            with open("yolo-coco/yolov3.weights", 'wb') as f:
+                for data in tqdm.tqdm(r.iter_content(block_size), total=total_size // block_size, unit='KB', unit_scale=True):
+                    wrote = wrote + len(data)
+                    f.write(data)
+
+        self.weightsPath = "yolo-coco/yolov3.weights"
+
+    def load_net(self) -> bool:
+        if self.weightsPath is not None and self.configPath is not None:
+            self.net = cv2.dnn.readNetFromDarknet(
+                self.configPath, self.weightsPath)
+            return True
+        else:
+            return False
 
     def detect(self, image: np.ndarray) -> Tuple[np.ndarray, list, list]:
         (H, W) = image.shape[:2]
@@ -52,7 +91,7 @@ class PeopleDetector:
             boxes, confidences, self.conf, self.thresh)
         return idxs, boxes, confidences
 
-    def rectangle_detections(self, image, idxs, boxes, confidences):
+    def rectangle_detections(self, image: np.ndarray, idxs: np.ndarray, boxes: list, confidences: list) -> np.ndarray:
         if len(idxs) > 0:
             for i in idxs.flatten():
                 (x, y) = (boxes[i][0], boxes[i][1])
