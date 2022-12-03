@@ -14,8 +14,6 @@ Added load methods for weights and config files. Thanks to the ***load_weights_f
 
 These images are taken from the internet.
 
-Added load methods for weights and config files. Thanks to the ***load_weights_from_url*** method, the weights file can also be added to the project with Python code.
-
 Original | Detected
 --- | ---
 ![original](images/test2.jpg) | ![detected](images/results/test2_output.jpg)
