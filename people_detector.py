@@ -1,13 +1,12 @@
 import numpy as np
 import cv2
-import os
-import requests
-import tqdm
-
+from os import path, mkdir
+from requests import get as rget
+from tqdm import tqdm
 from typing import Tuple
 
 
-LABELS_PATH = os.path.sep.join(["yolo-coco", "coco.names"])
+LABELS_PATH = path.sep.join(["yolo-coco", "coco.names"])
 LABELS = open(LABELS_PATH).read().strip().split("\n")
 COLORS = np.random.randint(0, 255, size=(len(LABELS), 3), dtype="uint8")
 PERSON_ID = LABELS.index("person")
@@ -31,20 +30,16 @@ class PeopleDetector:
         self.weightsPath = weightsPath
 
     def load_weights_from_url(self, url: str):
+        if not path.exists(path="yolo-coco"):
+            mkdir(name='yolo-coco')
 
-        # check if yolo-coco folder exists
-        if not os.path.exists(path="yolo-coco"):
-            os.mkdir(name='yolo-coco')
-
-        # check if weights file exists
-        if not os.path.exists("yolo-coco/yolov3.weights"):
-            # show download progress
-            r = requests.get(url, stream=True)
+        if not path.exists("yolo-coco/yolov3.weights"):
+            r = rget(url, stream=True)
             total_size = int(r.headers.get('content-length', 0))
             block_size = 1024
             wrote = 0
             with open("yolo-coco/yolov3.weights", 'wb') as f:
-                for data in tqdm.tqdm(r.iter_content(block_size), total=total_size // block_size, unit='KB', unit_scale=True):
+                for data in tqdm(r.iter_content(block_size), total=total_size // block_size, unit='KB', unit_scale=True):
                     wrote = wrote + len(data)
                     f.write(data)
 

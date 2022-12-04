@@ -18,3 +18,11 @@ Original | Detected
 --- | ---
 ![original](images/test2.jpg) | ![detected](images/results/test2_output.jpg)
 ![original](images/test8.jpg) | ![detected](images/results/test8_output.jpg)
+
+## ImagePolluter Example
+
+![image-polluter](images/demo-polluter/Figure_1.png)
+
+### Detection on Polluted Images
+
+![image-polluter-detection](images/demo-polluter/Figure_2.png)
