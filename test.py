@@ -1,8 +1,9 @@
 import os
 import cv2
 from people_detector import PeopleDetector
+from masker import Masker
 
-image_path = "images/test7.jpg"
+image_path = "images/test2.jpg"
 
 weightsPath = os.path.sep.join(["yolo-coco", "yolov3.weights"])
 configPath = os.path.sep.join(["yolo-coco", "yolov3.cfg"])
@@ -20,8 +21,11 @@ image = detector.rectangle_detections(image, idxs, boxes, confidences)
 image = detector.resize(image)
 image = detector.put_count_text(image, people_count)
 
-cv2.imshow("Image", image)
+
+cv2.imshow("Frame", image)
 cv2.waitKey(0)
+cv2.destroyAllWindows()
+
 
 
 # video_path = "videos/test4.mp4"
