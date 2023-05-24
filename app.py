@@ -57,7 +57,6 @@ def process_video():
             # time to pass the line
             current_time = time.time()
             t = current_time - start
-            print(n,t)
 
             # calculate the flow 
             flow = n / t
