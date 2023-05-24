@@ -53,7 +53,10 @@ class Liner:
         best_m, best_b = 0, 0
         for i in range(len(centers)):
             for j in range(i+1, len(centers)):
-                m = (centers[j][1] - centers[i][1]) / (centers[j][0] - centers[i][0])
+                try:
+                    m = (centers[j][1] - centers[i][1]) / (centers[j][0] - centers[i][0])
+                except ZeroDivisionError:
+                    continue
                 b = centers[i][1] - m * centers[i][0]
                 inliers = 0
                 for center in centers:
