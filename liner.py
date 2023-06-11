@@ -11,7 +11,7 @@ class Liner:
 
     def _calc_center(self, box: Tuple[int, int, int, int]) -> Tuple[int, int]:
         x, y, w, h = box
-        return (x + w // 2, y + h // 2)
+        return (int(x + w // 2), int(y + h // 2))
     
     def _calc_distance(self, point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
         return np.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
@@ -170,3 +170,29 @@ class Liner:
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 255), 2)
         return image
 
+
+    def put_remaining_times_22(self,image, centers, speed,l1,l2,l3):
+        max_waiting_time = 0
+        for center in centers:
+            # if under the l2
+            if center[1] > l2[1]:
+                distance = self._calc_distance(center, l3) / 10
+            else:
+                distance = self._calc_distance(center, l2) * 2.5 + self._calc_distance(l2, l3) / 10
+            time = (distance / speed) / 60
+            if time > max_waiting_time:
+                max_waiting_time = time
+            image = cv2.putText(image, ">: {:.2f}".format(time), (center[0], center[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 255, 255), 1)
+        return image,max_waiting_time
+    
+
+    def put_remaining_times_3(self,image, centers, speed,l1,l2):
+        max_waiting_time = 0
+        for center in centers:
+            # if under the l2
+            distance = self._calc_distance(center, l2) * 0.7
+            time = (distance / speed)  / 60
+            if time > max_waiting_time:
+                max_waiting_time = time
+            image = cv2.putText(image, ">: {:.2f}".format(time), (center[0], center[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.3, (0, 255, 255), 1)
+        return image,max_waiting_time

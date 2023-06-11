@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 def process_video():
     while True:
-        video_path = "ituvideos/22.avi" 
+        video_path = "ituvideos/3.avi" 
         video = cv2.VideoCapture(video_path)    
         
         while True:
@@ -23,7 +23,7 @@ def process_video():
             if not success:
                 break
             
-            mask_file_path = "masks/22.png"
+            mask_file_path = "masks/3.png"
             img_masker = Masker(frame)
             white = img_masker.load_mask(mask_file_path)
             masked_image = img_masker.apply_mask(white)
@@ -38,8 +38,8 @@ def process_video():
             centers = img_liner.calc_centers(boxes_filtered)
             show = img_liner.add_dots(resized_frame_for_show, centers)
 
-            pt1 = (650, 80)
-            pt2 = (800, 80)
+            pt1 = (500, 240)
+            pt2 = (750, 280)
 
             # number of people under the line
             n = len([center for center in centers if center[1] > pt1[1] and center[1] > pt2[1]])
@@ -47,9 +47,8 @@ def process_video():
             # number of people in the queue
             m = len(centers)
 
-            l1 = (300,60)
+            l1 = (280,550)
             l2 = (750,80)
-            l3 = (950,400)
 
             total_distance = img_liner._calc_distance(l1, l2)
             L = total_distance / 1280
@@ -63,10 +62,9 @@ def process_video():
             density = m / L
             speed = flow / density
 
-            show,mwt = img_liner.put_remaining_times_22(show, centers, speed, l1,l2,l3)
+            show,mwt = img_liner.put_remaining_times_3(show, centers, speed, l1,l2)
 
             show = cv2.line(show, l1, l2, (255, 0, 255), 1)
-            show = cv2.line(show, l2, l3, (255, 0, 255), 1)
 
             # draw line with cv2.line
             show = cv2.line(show, pt1, pt2, (0, 255, 255), 1)
